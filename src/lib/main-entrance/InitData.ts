@@ -212,7 +212,7 @@ export default class InitData {
     cutBoxSizeContainer.style.display = "none";
   }
 
-  // 设置裁剪框尺寸显示容器位置
+  // 设置裁剪框尺寸显示d容器位置
   public setCutBoxSizePosition(x: number, y: number) {
     if (cutBoxSizeContainer == null) return;
     const { left, top } = getToolRelativePosition(x, y);
@@ -270,7 +270,7 @@ export default class InitData {
     if (screenShotController) {
       sscTop = parseInt(screenShotController.style.top);
     }
-    toolController.style.top = rTop + sscTop + "px";
+    toolController.style.top = rTop + sscTop + 16+ "px";
   }
 
   // 获取截图工具栏点击状态
