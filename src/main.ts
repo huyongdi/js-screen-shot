@@ -984,8 +984,9 @@ export default class ScreenShot {
     }
 
     // 当前截取的是全屏，则修改工具栏的位置到截图容器最底部，防止超出
-    if (this.getFullScreenStatus) {
+    if (this.getFullScreenStatus && parseFloat(this.screenShotContainer.style.height) === document.body.clientHeight) {
       const containerHeight = parseInt(this.screenShotContainer.style.height);
+
       // 重新计算工具栏的x轴位置
       const toolPositionX =
         (this.drawGraphPosition.width / this.dpr -

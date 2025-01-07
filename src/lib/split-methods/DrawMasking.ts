@@ -48,7 +48,7 @@ export function drawMasking(
 
   // 绘制闪烁边框
   if (plugInParameters.getBlink()) {
-    context.lineWidth = 2; // 边框宽度
+    context.lineWidth = 5; // 边框宽度
     context.strokeStyle = "#368FFF"; // 设置边框颜色
     // context.setLineDash([]); // 确保没有虚线
 
