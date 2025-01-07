@@ -216,12 +216,12 @@ export default class InitData {
   public setCutBoxSizePosition(x: number, y: number) {
     if (cutBoxSizeContainer == null) return;
     const { left, top } = getToolRelativePosition(x, y);
-    cutBoxSizeContainer.style.left = left + "px";
+    cutBoxSizeContainer.style.left = left + 4 + "px";
     let sscTop = 0;
     if (screenShotController) {
       sscTop = parseInt(screenShotController.style.top);
     }
-    cutBoxSizeContainer.style.top = top + sscTop + "px";
+    cutBoxSizeContainer.style.top = top + sscTop +8 + "px";
   }
 
   public setTextEditState(state: boolean) {
