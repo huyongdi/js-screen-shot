@@ -38,6 +38,11 @@ export function setPlugInParameters(options: screenShotType) {
     plugInParameters.setScreenShotDom(options.screenShotDom);
   }
 
+  // 调用者传入了边框闪烁
+  if (options?.borderBlink) {
+    plugInParameters.setBlink(options.borderBlink);
+  }
+
   // 调用者传入了裁剪区域边框像素点颜色信息
   if (options?.cutBoxBdColor) {
     plugInParameters.setCutBoxBdColor(options.cutBoxBdColor);

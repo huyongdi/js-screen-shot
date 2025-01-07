@@ -21,6 +21,9 @@ let showScreenData = false;
 let screenShotDom: null | HTMLElement = null;
 let destroyContainer = true;
 
+// 边框闪烁
+let borderBlink = false;
+
 // 蒙层颜色
 const maskColor = { r: 0, g: 0, b: 0, a: 0.6 };
 let writeBase64 = true;
@@ -63,6 +66,7 @@ export default class PlugInParameters {
       destroyContainer = true;
       userToolbar = [];
       h2cCrossImgLoadErrFn = null;
+      borderBlink = false;
     }
   }
 
@@ -131,6 +135,16 @@ export default class PlugInParameters {
   // 设置展示图片至容器的状态
   public setShowScreenDataStatus(status: boolean) {
     showScreenData = status;
+  }
+
+  // 获取是否闪烁
+  public getBlink() {
+    return borderBlink;
+  }
+
+  // 设置展示图片至容器的状态
+  public setBlink(status: boolean) {
+    borderBlink = status;
   }
 
   // 设置蒙层颜色

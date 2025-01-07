@@ -45,6 +45,23 @@ export function drawMasking(
       context.drawImage(imgData, 0, 0, maxWidth, maxHeight);
     }
   }
+
+  // 绘制闪烁边框
+  if (plugInParameters.getBlink()) {
+    context.lineWidth = 2; // 边框宽度
+    context.strokeStyle = "#368FFF"; // 设置边框颜色
+    // context.setLineDash([]); // 确保没有虚线
+
+    context.strokeRect(0, 0, canvasSize.canvasWidth, canvasSize.canvasHeight); // 绘制边框
+    setTimeout(() => {
+      context.globalCompositeOperation = "destination-out"; // 用透明绘制，移除边框
+      context.strokeRect(0, 0, canvasSize.canvasWidth, canvasSize.canvasHeight); // 清除边框
+      context.globalCompositeOperation = "source-over"; // 默认合成模式
+      // 绘制结束
+      context.restore();
+    }, 1000);
+  }
+
   // 绘制蒙层
   context.save();
   const maskColor = data.getMaskColor();
@@ -58,5 +75,5 @@ export function drawMasking(
     context.fillRect(0, 0, maxWidth, maxHeight);
   }
   // 绘制结束
-  context.restore();
+  // context.restore();
 }

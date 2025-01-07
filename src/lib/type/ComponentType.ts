@@ -172,4 +172,5 @@ export type screenShotType = {
   userToolbar?: Array<userToolbarType>; // 用户自定义的工具栏图标
   canvasEvents?: mouseEventType; // 截图画布的事件监听
   h2cIgnoreElementsCallback?: (element: Element) => boolean; // html2canvas模式需要忽略的元素回调
+  borderBlink?: boolean; // 边框是否闪烁
 };
