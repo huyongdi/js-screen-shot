@@ -36,6 +36,10 @@ export default [
     title: "undo"
   },
   {
+    id: 12,
+    title: "redo"
+  },
+  {
     id: 10,
     title: "close"
   },

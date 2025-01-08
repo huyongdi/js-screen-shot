@@ -1,5 +1,8 @@
 import { positionInfoType, textInfoType } from "@/lib/type/ComponentType";
-import { takeOutHistory } from "@/lib/common-methods/TakeOutHistory";
+import {
+  redoHistory,
+  takeOutHistory
+} from "@/lib/common-methods/TakeOutHistory";
 import { getToolRelativePosition } from "@/lib/common-methods/GetToolRelativePosition";
 import PlugInParameters from "@/lib/main-entrance/PlugInParameters";
 
@@ -21,7 +24,7 @@ let penSize = 2;
 // 马赛克工具的笔触大小
 let mosaicPenSize = 10;
 // 裁剪框顶点边框直径大小
-const borderSize = 10;
+const borderSize = 8;
 // 撤销点击次数
 let undoClickNum = 0;
 // 画笔历史记录
@@ -221,7 +224,7 @@ export default class InitData {
     if (screenShotController) {
       sscTop = parseInt(screenShotController.style.top);
     }
-    cutBoxSizeContainer.style.top = top + sscTop +8 + "px";
+    cutBoxSizeContainer.style.top = top + sscTop + 8 + "px";
   }
 
   public setTextEditState(state: boolean) {
@@ -270,7 +273,7 @@ export default class InitData {
     if (screenShotController) {
       sscTop = parseInt(screenShotController.style.top);
     }
-    toolController.style.top = rTop + sscTop + 16+ "px";
+    toolController.style.top = rTop + sscTop + "px";
   }
 
   // 获取截图工具栏点击状态
@@ -601,12 +604,37 @@ export default class InitData {
     undoController.removeEventListener("click", this.cancelEvent);
   }
 
+  public setRedoStatus(status: boolean) {
+    undoController = this.getRedoController();
+    if (undoController == null) return;
+    if (status) {
+      // 启用撤销按钮
+      undoController.classList.add("redo");
+      undoController.classList.remove("redo-disabled");
+      undoController.addEventListener("click", this.redoEvent);
+      return;
+    }
+    // 禁用撤销按钮
+    undoController.classList.add("redo-disabled");
+    undoController.classList.remove("redo");
+    undoController.removeEventListener("click", this.redoEvent);
+  }
+
   public cancelEvent() {
     takeOutHistory();
   }
 
+  public redoEvent() {
+    redoHistory();
+  }
+
   public getUndoController() {
     undoController = document.getElementById("undoPanel");
+    return undoController;
+  }
+
+  public getRedoController() {
+    undoController = document.getElementById("redoPanel");
     return undoController;
   }
 

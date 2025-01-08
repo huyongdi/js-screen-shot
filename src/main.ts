@@ -514,6 +514,9 @@ export default class ScreenShot {
     });
   };
 
+  private lastMouseDownPosition = { x: 0, y: 0 };
+  private minMoveDistance = 5; // 设置最小移动距离（像素）
+
   // 鼠标按下事件
   private mouseDownEvent = (event: MouseEvent | TouchEvent) => {
     // 隐藏颜色选择面板
@@ -541,6 +544,7 @@ export default class ScreenShot {
     }
     // 当前操作的是撤销
     if (this.data.getToolName() == "undo") return;
+
     this.data.setDragging(true);
     this.drawStatus = false;
     // 重置工具栏超出状态
@@ -551,6 +555,11 @@ export default class ScreenShot {
     const mouseY = nonNegativeData(
       event instanceof MouseEvent ? event.offsetY : event.touches[0].pageY
     );
+    this.lastMouseDownPosition = {
+      x: mouseX,
+      y: mouseY
+    };
+    console.log('qqq-mousedown坐标',this.lastMouseDownPosition)
 
     // 如果当前操作的是截图工具栏
     if (this.data.getToolClickStatus()) {
@@ -666,8 +675,23 @@ export default class ScreenShot {
     ) {
       return;
     }
+
     // 去除默认事件
     event.preventDefault();
+
+    // 获取当前鼠标坐标
+    const currentX = nonNegativeData(
+      event instanceof MouseEvent ? event.offsetX : event.touches[0].pageX
+    );
+    const currentY = nonNegativeData(
+      event instanceof MouseEvent ? event.offsetY : event.touches[0].pageY
+    );
+
+    // 如果鼠标位置与mousedown相同，则不属于move不做操作
+    if (currentX == this.lastMouseDownPosition.x && currentY === this.lastMouseDownPosition.y) {
+      console.log('qqq-move与down坐标相同')
+      return;
+    }
 
     // 工具栏未选择且鼠标处于按下状态时
     if (!this.data.getToolClickStatus() && this.data.getDragging()) {
@@ -680,13 +704,8 @@ export default class ScreenShot {
     }
     // 获取当前绘制中的工具位置信息
     const { startX, startY, width, height } = this.drawGraphPosition;
-    // 获取当前鼠标坐标
-    const currentX = nonNegativeData(
-      event instanceof MouseEvent ? event.offsetX : event.touches[0].pageX
-    );
-    const currentY = nonNegativeData(
-      event instanceof MouseEvent ? event.offsetY : event.touches[0].pageY
-    );
+
+    // console.log('qqq-move坐标',currentX,currentY)
     // 绘制中工具的临时宽高
     const tempWidth = currentX - startX;
     const tempHeight = currentY - startY;
@@ -969,19 +988,19 @@ export default class ScreenShot {
     );
     const containerHeight = this.screenShotContainer.height / this.dpr;
 
-    // 工具栏的位置超出截图容器时，调整工具栏位置防止超出
-    if (toolLocation.mouseY > containerHeight - 64) {
-      toolLocation.mouseY -= this.drawGraphPosition.height + 64;
-      // 超出屏幕顶部时
-      if (toolLocation.mouseY < 0) {
-        const containerHeight = parseInt(this.screenShotContainer.style.height);
-        toolLocation.mouseY = containerHeight - this.fullScreenDiffHeight;
-      }
-      // 设置工具栏超出状态为true
-      this.data.setToolPositionStatus(true);
-      // 隐藏裁剪框尺寸显示容器
-      this.data.setCutBoxSizeStatus(false);
-    }
+    // // 工具栏的位置超出截图容器时，调整工具栏位置防止超出
+    // if (toolLocation.mouseY > containerHeight - 64) {
+    //   toolLocation.mouseY -= this.drawGraphPosition.height + 64;
+    //   // 超出屏幕顶部时
+    //   if (toolLocation.mouseY < 0) {
+    //     const containerHeight = parseInt(this.screenShotContainer.style.height);
+    //     toolLocation.mouseY = containerHeight - this.fullScreenDiffHeight;
+    //   }
+    //   // 设置工具栏超出状态为true
+    //   this.data.setToolPositionStatus(true);
+    //   // 隐藏裁剪框尺寸显示容器
+    //   this.data.setCutBoxSizeStatus(false);
+    // }
 
     // 当前截取的是全屏，则修改工具栏的位置到截图容器最底部，防止超出
     if (this.getFullScreenStatus && parseFloat(this.screenShotContainer.style.height) === document.body.clientHeight) {
@@ -1142,6 +1161,8 @@ export default class ScreenShot {
     // 单击截取屏幕状态为true
     // 则截取整个屏幕
     const cutBoxPosition = this.data.getCutOutBoxPosition();
+    // console.log('qqq',cutBoxPosition,this.dragFlag);
+
     if (
       cutBoxPosition.width === 0 &&
       cutBoxPosition.height === 0 &&
@@ -1150,14 +1171,15 @@ export default class ScreenShot {
       !this.dragFlag &&
       this.clickCutFullScreen
     ) {
+      console.log('qqq进入全屏设置')
       const borderSize = this.data.getBorderSize();
       this.getFullScreenStatus = true;
       // 设置裁剪框位置为全屏
       this.tempGraphPosition = drawCutOutBox(
         0,
         0,
-        this.screenShotContainer.width - borderSize / 2,
-        this.screenShotContainer.height - borderSize / 2,
+        this.screenShotContainer.width,
+        this.screenShotContainer.height,
         this.screenShotCanvas,
         borderSize,
         this.screenShotContainer,

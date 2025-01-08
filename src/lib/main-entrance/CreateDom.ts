@@ -147,10 +147,24 @@ export default class CreateDom {
       // 图标隐藏状态为true则直接跳过本次循环
       if (icoHiddenStatus) continue;
       const itemPanel = document.createElement("div");
+
       // 给itemPanel绑定点击事件
       this.bindToolClickEvent(itemPanel, item);
       itemPanel.setAttribute("data-title", item.title);
       itemPanel.setAttribute("data-id", item.id + "");
+
+      if (item.title === "close") {
+        itemPanel.innerText = "取消";
+        itemPanel.classList.add("panel-close");
+        itemPanel.classList.add("panel-icon");
+      } else if (item.title === "confirm") {
+        itemPanel.innerText = "保存";
+        itemPanel.classList.add("panel-confirm");
+        itemPanel.classList.add("panel-icon");
+      } else {
+
+      }
+
       if (item?.icon) {
         itemPanel.setAttribute("data-icon", item.icon);
       }
@@ -350,6 +364,11 @@ export default class CreateDom {
     if (item.title == "undo") {
       itemPanel.className = `item-panel undo-disabled`;
       itemPanel.id = "undoPanel";
+      return;
+    }
+    if (item.title == "redo") {
+      itemPanel.className = `item-panel redo-disabled`;
+      itemPanel.id = "redoPanel";
       return;
     }
     itemPanel.className = `item-panel ${item.title}`;

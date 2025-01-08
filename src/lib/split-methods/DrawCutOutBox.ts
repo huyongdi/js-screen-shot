@@ -56,42 +56,73 @@ export function drawCutOutBox(
   context.fillStyle = data.getCutBoxBdColor();
   // 是否绘制裁剪框的8个像素点
   if (drawBorders) {
+    const size = borderSize
+    // 设定圆点的半径
+    const radius = size / 2;
+
+    // 设定外框的颜色和宽度
+    context.lineWidth = 2;  // 外框宽度，可以根据需求调整
+    context.strokeStyle = '#368FFF';  // 外框颜色为蓝色
+
+    // 设定内框的填充颜色为白色
+    context.fillStyle = 'white';
+
+    // 绘制8个圆点
+    const points = [
+      [mouseX - size / 2, mouseY - size / 2],
+      [mouseX - size / 2 + width / 2, mouseY - size / 2],
+      [mouseX - size / 2 + width, mouseY - size / 2],
+      [mouseX - size / 2, mouseY - size / 2 + height / 2],
+      [mouseX - size / 2 + width, mouseY - size / 2 + height / 2],
+      [mouseX - size / 2, mouseY - size / 2 + height],
+      [mouseX - size / 2 + width / 2, mouseY - size / 2 + height],
+      [mouseX - size / 2 + width, mouseY - size / 2 + height]
+    ];
+
+    // 遍历每个点，绘制圆
+    points.forEach(([x, y]) => {
+      context.beginPath();
+      context.arc(x + radius, y + radius, radius, 0, Math.PI * 2); // 绘制圆，调整圆心位置
+      context.fill();  // 填充白色
+      context.stroke();  // 绘制蓝色边框
+    });
+
     // 像素点大小
-    const size = borderSize;
+    // const size = borderSize;
     // 绘制像素点
-    context.fillRect(mouseX - size / 2, mouseY - size / 2, size, size);
-    context.fillRect(
-      mouseX - size / 2 + width / 2,
-      mouseY - size / 2,
-      size,
-      size
-    );
-    context.fillRect(mouseX - size / 2 + width, mouseY - size / 2, size, size);
-    context.fillRect(
-      mouseX - size / 2,
-      mouseY - size / 2 + height / 2,
-      size,
-      size
-    );
-    context.fillRect(
-      mouseX - size / 2 + width,
-      mouseY - size / 2 + height / 2,
-      size,
-      size
-    );
-    context.fillRect(mouseX - size / 2, mouseY - size / 2 + height, size, size);
-    context.fillRect(
-      mouseX - size / 2 + width / 2,
-      mouseY - size / 2 + height,
-      size,
-      size
-    );
-    context.fillRect(
-      mouseX - size / 2 + width,
-      mouseY - size / 2 + height,
-      size,
-      size
-    );
+    // context.fillRect(mouseX - size / 2, mouseY - size / 2, size, size);
+    // context.fillRect(
+    //   mouseX - size / 2 + width / 2,
+    //   mouseY - size / 2,
+    //   size,
+    //   size
+    // );
+    // context.fillRect(mouseX - size / 2 + width, mouseY - size / 2, size, size);
+    // context.fillRect(
+    //   mouseX - size / 2,
+    //   mouseY - size / 2 + height / 2,
+    //   size,
+    //   size
+    // );
+    // context.fillRect(
+    //   mouseX - size / 2 + width,
+    //   mouseY - size / 2 + height / 2,
+    //   size,
+    //   size
+    // );
+    // context.fillRect(mouseX - size / 2, mouseY - size / 2 + height, size, size);
+    // context.fillRect(
+    //   mouseX - size / 2 + width / 2,
+    //   mouseY - size / 2 + height,
+    //   size,
+    //   size
+    // );
+    // context.fillRect(
+    //   mouseX - size / 2 + width,
+    //   mouseY - size / 2 + height,
+    //   size,
+    //   size
+    // );
   }
   // 绘制结束
   context.restore();

@@ -7,19 +7,23 @@
 
 #toolPanel {
   min-width: 392px;
-  height: 24px;
+  //height: 24px;
   background: #ffffff;
   z-index: 9999;
   position: absolute;
   top: 0;
   left: 0;
-  padding: 10px;
+  //padding: 10px;
+  //height: 48px;
+  padding: 6px 12px;
   box-sizing: content-box;
-
+  border-radius: 8px;
+  cursor: pointer;
   .item-panel {
-    width: 24px;
-    height: 24px;
-    margin-right: 15px;
+    width: 31px;
+    height: 31px;
+    border-radius: 4px;
+    margin-right: 12px;
     float: left;
 
     &:last-child {
@@ -76,19 +80,19 @@
   }
 
   .brush {
-    background-image: url("~@/assets/img/brush.png");
-    background-size: cover;
+    background: url("~@/assets/img/brush.png") no-repeat center;
+    background-size: auto;
 
-    &:hover {
-      background-image: url("~@/assets/img/brush-hover.png");
+    &:hover{
+      background-color: #EEEFF1;
     }
 
     &:active {
-      background-image: url("~@/assets/img/brush-click.png");
+      background-color: #E5E6EB;
     }
   }
   .brush-active{
-    background-image: url("~@/assets/img/brush-click.png");
+    background-color: #E5E6EB;
   }
 
   .mosaicPen {
@@ -109,24 +113,26 @@
 
   .separateLine {
     width: 1px;
-    background-image: url("~@/assets/img/seperateLine.png");
-    background-size: cover;
+    background: #D9DCE2;
+    border-radius: 4px;
+    height: 24px;
+    margin: 4px 6px 0 0;
   }
 
   .text {
-    background-image: url("~@/assets/img/text.png");
-    background-size: cover;
+    background: url("~@/assets/img/text.png") no-repeat center;
+    background-size: auto;
 
-    &:hover {
-      background-image: url("~@/assets/img/text-hover.png");
+    &:hover{
+      background-color: #EEEFF1;
     }
 
     &:active {
-      background-image: url("~@/assets/img/text-click.png");
+      background-color: #E5E6EB;
     }
   }
   .text-active {
-    background-image: url("~@/assets/img/text-click.png");
+    background-color: #E5E6EB;
   }
 
   .save {
@@ -142,36 +148,78 @@
     }
   }
 
-  .close {
-    background-image: url("~@/assets/img/close.png");
-    background-size: cover;
-
-    &:hover {
-      background-image: url("~@/assets/img/close-hover.png");
+  .panel-icon{
+    //width: 64px;
+    //height: 36px;
+    width: 56px;
+    height: 31px;
+    border-radius: 8px;
+    line-height: 31px;
+    text-align: center;
+    color:#fff;
+  }
+  .panel-close{
+    background: #FF543A;
+    &:hover{
+      background: #FF6952;
     }
+    &:active{
+      background: #EB4F37;
+    }
+  }
+  .panel-confirm{
+    background: #24C366;
+    &:hover{
+      background: #3AD47A;
+    }
+    &:active{
+      background: #23B660;
+    }
+  }
+
+  .close {
+    //background-image: url("~@/assets/img/close.png");
+    //background-size: cover;
+    //
+    //&:hover {
+    //  background-image: url("~@/assets/img/close-hover.png");
+    //}
   }
 
   .undo-disabled {
-    background-size: cover;
-    background-image: url("~@/assets/img/undo-disabled.png");
+    background-image: url("~@/assets/img/ifly-undo.png");
+    opacity: .4;
+    cursor: not-allowed;
+    background-size: auto;
+    background-repeat: no-repeat;
+    background-position: center;
   }
 
   .undo {
-    background-size: cover;
-    background-image: url("~@/assets/img/undo.png");
+    background-image: url("~@/assets/img/ifly-undo.png");
+    background-size: auto;
+    background-repeat: no-repeat;
+    background-position: center;
+  }
 
-    &:hover{
-      background-image: url("~@/assets/img/undo-hover.png");
-    }
+  .redo-disabled {
+    background-image: url("~@/assets/img/ifly-redo.png");
+    opacity: .4;
+    cursor: not-allowed;
+    background-size: auto;
+    background-repeat: no-repeat;
+    background-position: center;
+  }
+
+  .redo {
+    background-image: url("~@/assets/img/ifly-redo.png");
+    background-size: auto;
+    background-repeat: no-repeat;
+    background-position: center;
   }
 
   .confirm {
-    background-image: url("~@/assets/img/confirm.png");
-    background-size: cover;
 
-    &:hover {
-      background-image: url("~@/assets/img/confirm-hover.png");
-    }
   }
 }
 
