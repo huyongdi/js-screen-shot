@@ -239,7 +239,9 @@
   top: 0;
   left: 23px;
   transform: rotate(180deg);
-
+  &.rotate{
+    transform: rotate(0deg);
+  }
   img {
     width: 100%;
     height: 100%;
@@ -247,15 +249,38 @@
 }
 
 #optionPanel {
-  height: 20px;
+  //height: 20px;
   top: 6px;
   left: 0;
-  border-radius: 5px;
+  border-radius: 4px;
   background: #ffffff;
   z-index: 9999;
   position: absolute;
   padding: 10px;
   box-sizing: content-box;
+
+  .remark-panel{
+    position: relative;
+    .remark-input{
+      border: 1px solid #D9DCE2;
+      border-radius: 4px;
+      height: 136px;
+      width: 296px;
+      padding: 8px 10px;
+      &::placeholder {
+        color: #BFBFBF;
+        font-size: 14px;
+        opacity: 1;
+      }
+    }
+    .remark-span{
+      position: absolute;
+      right: 8px;
+      bottom: 8px;
+      font-size: 10px;
+      color: #8C8C8C;
+    }
+  }
 
   .text-size-panel {
     width: 65px;

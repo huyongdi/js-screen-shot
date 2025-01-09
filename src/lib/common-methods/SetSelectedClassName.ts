@@ -23,7 +23,6 @@ export function setSelectedClassName(
   const path =
     mouseEvent.path || (mouseEvent.composedPath && mouseEvent.composedPath());
   // 获取div下的所有子元素
-  console.log('qqq',path)
   const nodes = path[1].children;
   for (let i = 0; i < nodes.length; i++) {
     const item = nodes[i] as HTMLDivElement;

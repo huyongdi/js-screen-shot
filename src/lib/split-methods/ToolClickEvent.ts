@@ -91,7 +91,7 @@ export function toolClickEvent(
   completeCallback: Function | undefined,
   closeCallback: Function | undefined
 ) {
-  console.log('qqq点击工具',toolName,index,mouseEvent,completeCallback,closeCallback)
+  console.log("qqq点击工具",toolName,index,mouseEvent,completeCallback,closeCallback)
   const data = new InitData();
   const plugInParameters = new PlugInParameters();
   data.setActiveToolName(toolName);
@@ -113,11 +113,9 @@ export function toolClickEvent(
   //     ScreenShotImageController
   //   );
   // }
-
-  console.log('qqq',toolName )
-  if (mouseEvent.target.className.includes('active')){
+  if (mouseEvent.target.className.includes("active")){
     // 取消选中相关效果
-    data.setToolName('');
+    data.setToolName("");
     setSelectedClassName(mouseEvent, index, false);
     data.setOptionStatus(false);
     data.setRightPanel(false);
@@ -128,18 +126,6 @@ export function toolClickEvent(
     data.setToolName(toolName);
     // 为当前点击项添加选中时的class名
     setSelectedClassName(mouseEvent, index, true);
-
-    // 初始化点击状态
-    data.setDragging(false);
-    data.setDraggingTrim(false);
-    // 设置裁剪框工具栏为点击状态
-    data.setToolClickStatus(true);
-
-    // 把remark单独拿出来做一次设置
-    if (toolName === 'remark') {
-
-      return
-    }
 
     if (toolName === "text") {
       // 显示文字选择容器
@@ -156,9 +142,8 @@ export function toolClickEvent(
     }
     // 显示选项面板
     data.setOptionStatus(true);
-    // 设置选项面板位置
-    data.setOptionPosition(calculateOptionIcoPosition(index));
     data.setRightPanel(true);
+
     if (toolName == "mosaicPen") {
       // 马赛克工具隐藏右侧颜色面板与角标
       data.setRightPanel(false);
@@ -167,6 +152,18 @@ export function toolClickEvent(
     // 清空文本输入区域的内容并隐藏文本输入框
     hideTextInput(toolName, screenShotCanvas);
 
+    // 初始化点击状态
+    data.setDragging(false);
+    data.setDraggingTrim(false);
+
+    // 备注组件
+    if (toolName === "remark") {
+      data.setRemarkPanelStatus(true);
+      data.setBrushSelectionStatus(false);
+      data.setRightPanel(false);
+    } else {
+      data.setRemarkPanelStatus(false);
+    }
 
     // 保存图片
     if (toolName == "save") {
@@ -211,9 +208,11 @@ export function toolClickEvent(
       data.setOptionStatus(false);
       takeOutHistory();
     }
+    // 设置裁剪框工具栏为点击状态
+    data.setToolClickStatus(true);
+    // 设置选项面板位置
+    data.setOptionPosition(calculateOptionIcoPosition(index));
   }
-
-
 }
 
 // 处理用户自定义工具栏的点击事件

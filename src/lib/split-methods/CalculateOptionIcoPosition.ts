@@ -5,11 +5,11 @@
 export function calculateOptionIcoPosition(index: number) {
   switch (index) {
     case 1:
-      return 24 - 8;
+      return 12 + 31 / 2 - 6;
     case 2:
-      return 24 * 2 + 8;
+      return 12 * 2 + 31 * 1.5 - 6;
     case 3:
-      return 24 * 4 - 6;
+      return 12 * 3 + 31 * 2.5 - 6;
     case 4:
       return 24 * 5 + 8;
     case 5:

@@ -19,13 +19,11 @@ export function takeOutHistory() {
 
   data.setUndoClickNum(data.getUndoClickNum() + 1);
   // 历史记录已取完，禁用撤回按钮点击
-  console.log('qqq-undo',data.getHistory().length)
   if (data.getHistory().length -1<= 0) {
     data.setUndoClickNum(0);
     data.setUndoStatus(false);
   }
   // 撤销的同时，需要判断恢复按钮是否可以点击了
-  console.log('qqqredo',data.getRedo().length)
   if (data.getRedo().length === 0) {
     data.setRedoStatus(false);
   } else {

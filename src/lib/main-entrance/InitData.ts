@@ -1,9 +1,9 @@
-import { positionInfoType, textInfoType } from "@/lib/type/ComponentType";
+import {positionInfoType, textInfoType} from "@/lib/type/ComponentType";
 import {
   takeOutRedo,
   takeOutHistory
 } from "@/lib/common-methods/TakeOutHistory";
-import { getToolRelativePosition } from "@/lib/common-methods/GetToolRelativePosition";
+import {getToolRelativePosition} from "@/lib/common-methods/GetToolRelativePosition";
 import PlugInParameters from "@/lib/main-entrance/PlugInParameters";
 
 // 裁剪框修剪状态
@@ -56,6 +56,7 @@ let optionIcoController: HTMLDivElement | null = null;
 let optionTextSizeController: HTMLDivElement | null = null;
 let brushSelectionController: HTMLDivElement | null = null;
 let textSizeContainer: HTMLDivElement | null = null;
+let remarkContainer: HTMLDivElement | null = null;
 let fontSize = 17;
 let optionController: HTMLDivElement | null = null;
 let colorSelectController: HTMLElement | null = null;
@@ -92,6 +93,7 @@ export default class InitData {
       optionTextSizeController = null;
       brushSelectionController = null;
       textSizeContainer = null;
+      remarkContainer = null;
       cutBoxSizeContainer = null;
       cutOutBoxPosition = {
         startX: 0,
@@ -110,13 +112,13 @@ export default class InitData {
       fontSize = 17;
       mosaicPenSize = 10;
       history = [];
-      redoStack=[];
+      redoStack = [];
       undoClickNum = 0;
       colorSelectController = null;
       rightPanel = null;
       colorSelectPanel = null;
       undoController = null;
-      redoController=null;
+      redoController = null;
     }
   }
 
@@ -141,7 +143,7 @@ export default class InitData {
   public setScreenShotPosition(left: number, top: number) {
     this.getScreenShotContainer();
     if (screenShotController == null) return;
-    const { left: rLeft, top: rTop } = getToolRelativePosition(left, top);
+    const {left: rLeft, top: rTop} = getToolRelativePosition(left, top);
     screenShotController.style.left = rLeft + "px";
     screenShotController.style.top = rTop + "px";
   }
@@ -223,7 +225,7 @@ export default class InitData {
   // 设置裁剪框尺寸显示d容器位置
   public setCutBoxSizePosition(x: number, y: number) {
     if (cutBoxSizeContainer == null) return;
-    const { left, top } = getToolRelativePosition(x, y);
+    const {left, top} = getToolRelativePosition(x, y);
     cutBoxSizeContainer.style.left = left + 4 + "px";
     let sscTop = 0;
     if (screenShotController) {
@@ -235,6 +237,7 @@ export default class InitData {
   public setTextEditState(state: boolean) {
     textEditState = state;
   }
+
   public getTextEditState() {
     return textEditState;
   }
@@ -272,7 +275,7 @@ export default class InitData {
   // 设置截图工具位置信息
   public setToolInfo(left: number, top: number) {
     toolController = document.getElementById("toolPanel") as HTMLDivElement;
-    const { left: rLeft, top: rTop } = getToolRelativePosition(left, top);
+    const {left: rLeft, top: rTop} = getToolRelativePosition(left, top);
     toolController.style.left = rLeft + "px";
     let sscTop = 0;
     if (screenShotController) {
@@ -294,6 +297,7 @@ export default class InitData {
   public setResetScrollbarState(state: boolean) {
     resetScrollbarState = state;
   }
+
   public getResetScrollbarState() {
     return resetScrollbarState;
   }
@@ -306,6 +310,7 @@ export default class InitData {
   public getDragging() {
     return dragging;
   }
+
   public setDragging(status: boolean) {
     dragging = status;
   }
@@ -348,7 +353,6 @@ export default class InitData {
     // 获取截图工具栏与三角形角标容器
     optionIcoController = this.getOptionIcoController();
     optionController = this.getOptionController();
-    console.log('qqq',optionIcoController,status)
     if (optionIcoController == null || optionController == null) return;
     if (status) {
       optionIcoController.style.display = "block";
@@ -385,6 +389,17 @@ export default class InitData {
     textSizeContainer.style.display = "none";
   }
 
+  public setRemarkPanelStatus(status: boolean) {
+    remarkContainer = this.getRemarkContainer();
+    if (remarkContainer == null) return;
+    if (status) {
+      console.log("显示remark");
+      remarkContainer.style.display = "flex";
+      return;
+    }
+    remarkContainer.style.display = "none";
+  }
+
   public setBrushSelectionStatus(status: boolean) {
     brushSelectionController = this.getBrushSelectionController();
     if (brushSelectionController == null) return;
@@ -408,6 +423,13 @@ export default class InitData {
       "optionIcoController"
     ) as HTMLDivElement | null;
     return optionIcoController;
+  }
+
+  public getRemarkContainer() {
+    textSizeContainer = document.getElementById(
+      "remarkPanel"
+    ) as HTMLDivElement | null;
+    return textSizeContainer;
   }
 
   public getTextSizeContainer() {
@@ -444,15 +466,32 @@ export default class InitData {
     optionIcoController = this.getOptionIcoController();
     optionController = this.getOptionController();
     if (optionIcoController == null || optionController == null) return;
+
     // 修改位置
     const toolPosition = this.getToolPosition();
     if (toolPosition == null) return;
+
+    // 如果底部间距小于所需间距，则内工具模块需要放到外工具模块上方
+    const needDistance = optionIcoController.offsetHeight + optionController.offsetHeight
+    console.log('qqq-工具栏定位计算', needDistance, toolPosition)
+
+    let icoTop, optionTop;
     const icoLeft = toolPosition.left + position + "px";
-    const icoTop = toolPosition.top + 44 + "px";
     const optionLeft = toolPosition.left + "px";
-    const optionTop = toolPosition.top + 44 + 6 + "px";
+
+    if (toolPosition.distance > needDistance) {
+      icoTop = toolPosition.top + 44 + "px";
+      optionTop = toolPosition.top + 44 + 6 + "px";
+      optionIcoController.classList.remove("rotate");
+    } else {
+      icoTop = toolPosition.top - optionIcoController.offsetHeight + "px";
+      optionTop = toolPosition.top - needDistance + "px";
+      optionIcoController.classList.add("rotate");
+    }
+
     optionIcoController.style.left = icoLeft;
     optionIcoController.style.top = icoTop;
+
     optionController.style.left = optionLeft;
     optionController.style.top = optionTop;
   }
@@ -461,9 +500,11 @@ export default class InitData {
   public getToolPosition() {
     toolController = this.getToolController();
     if (toolController == null) return;
+    // 工具底部距离视口底部的剩余距离
     return {
       left: toolController.offsetLeft,
-      top: toolController.offsetTop
+      top: toolController.offsetTop,
+      distance: window.innerHeight - toolController.offsetTop - toolController.offsetHeight
     };
   }
 
@@ -471,6 +512,7 @@ export default class InitData {
   public getSelectedColor() {
     return selectedColor;
   }
+
   public setSelectedColor(color: string) {
     selectedColor = color;
     colorSelectPanel = this.getColorSelectPanel();
@@ -487,6 +529,7 @@ export default class InitData {
   public getToolName() {
     return toolName;
   }
+
   public setToolName(itemName: string) {
     toolName = itemName;
   }
@@ -494,6 +537,7 @@ export default class InitData {
   public getToolId() {
     return toolId;
   }
+
   public setToolId(id: number | null) {
     toolId = id;
   }
@@ -502,6 +546,7 @@ export default class InitData {
   public getPenSize() {
     return penSize;
   }
+
   public setPenSize(size: number) {
     penSize = size;
   }
@@ -549,6 +594,7 @@ export default class InitData {
   public getUndoClickNum() {
     return undoClickNum;
   }
+
   public setUndoClickNum(clickNumber: number) {
     undoClickNum = clickNumber;
   }
@@ -557,6 +603,7 @@ export default class InitData {
     colorSelectController = document.getElementById("colorPanel");
     return colorSelectController;
   }
+
   public setColorPanelStatus(status: boolean) {
     colorSelectController = this.getColorPanel();
     if (colorSelectController == null) return;
@@ -570,6 +617,7 @@ export default class InitData {
   public getNoScrollStatus() {
     return noScrollStatus;
   }
+
   public setNoScrollStatus(status?: boolean) {
     if (status != null) {
       noScrollStatus = status;
@@ -596,6 +644,7 @@ export default class InitData {
     rightPanel = document.getElementById("rightPanel");
     return rightPanel;
   }
+
   public setRightPanel(status: boolean) {
     rightPanel = this.getRightPanel();
     if (rightPanel == null) return;
@@ -624,7 +673,6 @@ export default class InitData {
 
   public setRedoStatus(status: boolean) {
     redoController = this.getRedoController();
-    console.log('qqq-执行redo',redoController,status)
     if (redoController == null) return;
     if (status) {
       // 启用撤销按钮

@@ -120,6 +120,8 @@ export default class CreateDom {
     );
     // 渲染工具栏
     this.setToolBarIco();
+    // 渲染备注输入容器
+    this.setRemarkPanel();
     // 渲染文字大小选择容器
     this.setTextSizeSelectPanel();
     // 渲染画笔相关选项
@@ -174,6 +176,28 @@ export default class CreateDom {
     if (this.hiddenIcoArr.length > 0) {
       this.toolController.style.minWidth = "24px";
     }
+  }
+
+  // 渲染remark备注输入容器
+  private setRemarkPanel() {
+    const remarkPanel = document.createElement("div");
+    remarkPanel.className = "remark-panel";
+    remarkPanel.id = "remarkPanel";
+    const textarea = document.createElement("textarea");
+    textarea.className = "remark-input";
+    textarea.id = "remarkTextarea"
+    textarea.placeholder='请输入巡视记录';
+    textarea.maxLength = 200;
+    remarkPanel.appendChild(textarea);
+    const span = document.createElement("span");
+    span.className = "remark-span";
+    span.innerHTML = "0/200";
+    remarkPanel.appendChild(span);
+    textarea.addEventListener("input", () => {
+      const wordCount = textarea.value.length; // 获取输入框的字符数
+      span.innerHTML = wordCount + "/200";
+    });
+    this.optionController.appendChild(remarkPanel);
   }
 
   // 渲染文字大小选择容器
