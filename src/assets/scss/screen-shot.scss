@@ -36,8 +36,15 @@
     &:active {
       background-color: #E5E6EB;
     }
+    &.active{
+      background-color: #E5E6EB;
+    }
   }
 
+  .remark {
+    background: url("~@/assets/img/remark.png") no-repeat center;
+    background-size: auto;
+  }
   .square {
     background-image: url("~@/assets/img/square.png");
     background-size: cover;

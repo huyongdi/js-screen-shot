@@ -1,50 +1,56 @@
 export default [
   {
     id: 1,
-    title: "square"
+    title: "remark"
   },
   {
     id: 2,
-    title: "round"
-  },
-  {
-    id: 3,
-    title: "right-top"
-  },
-  {
-    id: 6,
     title: "text"
   },
   {
-    id: 4,
+    id: 3,
     title: "brush"
   },
   {
+    id: 4,
+    title: "right-top"
+  },
+
+  {
     id: 5,
+    title: "square"
+  },
+  {
+    id: 6,
+    title: "round"
+  },
+
+  {
+    id: 7,
     title: "mosaicPen"
   },
   {
-    id: 7,
+    id: 8,
     title: "separateLine"
   },
   {
-    id: 8,
+    id: 9,
     title: "save"
   },
   {
-    id: 9,
+    id: 10,
     title: "undo"
   },
   {
-    id: 12,
+    id: 11,
     title: "redo"
   },
   {
-    id: 10,
+    id: 12,
     title: "close"
   },
   {
-    id: 11,
+    id: 13,
     title: "confirm"
   }
 ];

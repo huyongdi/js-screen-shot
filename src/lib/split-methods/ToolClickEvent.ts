@@ -86,7 +86,7 @@ function drawCutOutBoxWithoutPixel(
 
 export function toolClickEvent(
   toolName: string,
-  index: number,
+  index: number, // 配置里面的id
   mouseEvent: any,
   completeCallback: Function | undefined,
   closeCallback: Function | undefined
@@ -105,98 +105,115 @@ export function toolClickEvent(
     ScreenShotImageController,
     screenShotCanvas
   } = toolBarContainer;
-  // 工具栏尚未点击，当前属于首次点击，重新绘制一个无像素点的裁剪框
-  if (!data.getToolClickStatus()) {
-    drawCutOutBoxWithoutPixel(
-      screenShotCanvas,
-      screenShotController,
-      ScreenShotImageController
-    );
-  }
-  // 更新当前点击的工具栏条目
-  data.setToolName(toolName);
-  // 为当前点击项添加选中时的class名
-  setSelectedClassName(mouseEvent, index, false);
-  if (toolName === "text") {
-    // 显示文字选择容器
-    data.setTextSizePanelStatus(true);
-    // 隐藏画笔尺寸选择容器
-    data.setBrushSelectionStatus(false);
-    // 颜色选择容器添加布局兼容样式
-    data.getColorSelectPanel()?.classList.add("text-select-status");
-  } else {
-    // 隐藏下拉选择框
-    data.setTextSizePanelStatus(false);
-    // 显示画笔尺寸选择容器
-    data.setBrushSelectionStatus(true);
-  }
-  // 显示选项面板
-  data.setOptionStatus(true);
-  // 设置选项面板位置
-  data.setOptionPosition(calculateOptionIcoPosition(index));
-  data.setRightPanel(true);
-  if (toolName == "mosaicPen") {
-    // 马赛克工具隐藏右侧颜色面板与角标
-    data.setRightPanel(false);
-    data.hiddenOptionIcoStatus();
-  }
-  // 清空文本输入区域的内容并隐藏文本输入框
-  hideTextInput(toolName, screenShotCanvas);
-  // 初始化点击状态
-  data.setDragging(false);
-  data.setDraggingTrim(false);
+  // // 工具栏尚未点击，当前属于首次点击，重新绘制一个无像素点的裁剪框
+  // if (!data.getToolClickStatus()) {
+  //   drawCutOutBoxWithoutPixel(
+  //     screenShotCanvas,
+  //     screenShotController,
+  //     ScreenShotImageController
+  //   );
+  // }
 
-  // 保存图片
-  if (toolName == "save") {
-    getCanvasImgData(true);
-    const callback = plugInParameters.getSaveCallback();
-    if (callback) {
-      callback(0, "保存成功");
-    }
-    // 销毁组件
-    data.destroyDOM();
-    data.setInitStatus(true);
-  }
-  // 销毁组件
-  if (toolName == "close") {
-    // 触发关闭回调函数
-    if (closeCallback) {
-      closeCallback();
-    }
-    data.destroyDOM();
-    data.setInitStatus(true);
-  }
-  // 确认截图
-  if (toolName == "confirm") {
-    const base64 = getCanvasImgData(false);
-    // 触发回调函数，截图数据回传给插件调用者
-    if (completeCallback) {
-      completeCallback({ base64, cutInfo: data.getCutOutBoxPosition() });
-    }
-    if (!plugInParameters.getDestroyContainerState()) {
-      // 隐藏工具栏
-      data.setToolStatus(false);
-      data.setOptionStatus(false);
-      return;
-    }
-    // 销毁组件
-    data.destroyDOM();
-    data.setInitStatus(true);
-  }
-  // 撤销
-  if (toolName == "undo") {
-    // 隐藏画笔选项工具栏
+  console.log('qqq',toolName )
+  if (mouseEvent.target.className.includes('active')){
+    // 取消选中相关效果
+    data.setToolName('');
+    setSelectedClassName(mouseEvent, index, false);
     data.setOptionStatus(false);
-    debugger
-    takeOutHistory();
+    data.setRightPanel(false);
+    data.setToolClickStatus(false);
+  } else {
+    // 设置当前选中工具栏的相关效果
+    // 更新当前点击的工具栏条目
+    data.setToolName(toolName);
+    // 为当前点击项添加选中时的class名
+    setSelectedClassName(mouseEvent, index, true);
+
+    // 初始化点击状态
+    data.setDragging(false);
+    data.setDraggingTrim(false);
+    // 设置裁剪框工具栏为点击状态
+    data.setToolClickStatus(true);
+
+    // 把remark单独拿出来做一次设置
+    if (toolName === 'remark') {
+
+      return
+    }
+
+    if (toolName === "text") {
+      // 显示文字选择容器
+      data.setTextSizePanelStatus(true);
+      // 隐藏画笔尺寸选择容器
+      data.setBrushSelectionStatus(false);
+      // 颜色选择容器添加布局兼容样式
+      data.getColorSelectPanel()?.classList.add("text-select-status");
+    } else {
+      // 隐藏下拉选择框
+      data.setTextSizePanelStatus(false);
+      // 显示画笔尺寸选择容器
+      data.setBrushSelectionStatus(true);
+    }
+    // 显示选项面板
+    data.setOptionStatus(true);
+    // 设置选项面板位置
+    data.setOptionPosition(calculateOptionIcoPosition(index));
+    data.setRightPanel(true);
+    if (toolName == "mosaicPen") {
+      // 马赛克工具隐藏右侧颜色面板与角标
+      data.setRightPanel(false);
+      data.hiddenOptionIcoStatus();
+    }
+    // 清空文本输入区域的内容并隐藏文本输入框
+    hideTextInput(toolName, screenShotCanvas);
+
+
+    // 保存图片
+    if (toolName == "save") {
+      getCanvasImgData(true);
+      const callback = plugInParameters.getSaveCallback();
+      if (callback) {
+        callback(0, "保存成功");
+      }
+      // 销毁组件
+      data.destroyDOM();
+      data.setInitStatus(true);
+    }
+    // 销毁组件
+    if (toolName == "close") {
+      // 触发关闭回调函数
+      if (closeCallback) {
+        closeCallback();
+      }
+      data.destroyDOM();
+      data.setInitStatus(true);
+    }
+    // 确认截图
+    if (toolName == "confirm") {
+      const base64 = getCanvasImgData(false);
+      // 触发回调函数，截图数据回传给插件调用者
+      if (completeCallback) {
+        completeCallback({ base64, cutInfo: data.getCutOutBoxPosition() });
+      }
+      if (!plugInParameters.getDestroyContainerState()) {
+        // 隐藏工具栏
+        data.setToolStatus(false);
+        data.setOptionStatus(false);
+        return;
+      }
+      // 销毁组件
+      data.destroyDOM();
+      data.setInitStatus(true);
+    }
+    // 撤销:未使用上，在前面被拦截
+    if (toolName == "undo") {
+      // 隐藏画笔选项工具栏
+      data.setOptionStatus(false);
+      takeOutHistory();
+    }
   }
 
-  if (toolName == 'redo') {
 
-  }
-
-  // 设置裁剪框工具栏为点击状态
-  data.setToolClickStatus(true);
 }
 
 // 处理用户自定义工具栏的点击事件

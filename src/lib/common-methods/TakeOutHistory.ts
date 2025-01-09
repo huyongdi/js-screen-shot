@@ -48,7 +48,7 @@ export function takeOutRedo() {
   }
 
   // 恢复栈已取完，禁用恢复点击
-  if (data.getRedo().length  === 0) {
+  if (data.getRedo().length === 0) {
     data.setRedoStatus(false);
   }
   // 恢复的同时需要判断撤销是否可以点击了

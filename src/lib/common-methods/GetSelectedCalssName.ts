@@ -1,10 +1,10 @@
 export function getSelectedClassName(index: number) {
   let className = "";
   switch (index) {
-    case 1:
+    case 5:
       className = "square-active";
       break;
-    case 2:
+    case 6:
       className = "round-active";
       break;
     case 3:

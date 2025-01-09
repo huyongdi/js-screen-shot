@@ -559,7 +559,6 @@ export default class ScreenShot {
       x: mouseX,
       y: mouseY
     };
-    console.log('qqq-mousedown坐标',this.lastMouseDownPosition)
 
     // 如果当前操作的是截图工具栏
     if (this.data.getToolClickStatus()) {
@@ -705,7 +704,6 @@ export default class ScreenShot {
     // 获取当前绘制中的工具位置信息
     const { startX, startY, width, height } = this.drawGraphPosition;
 
-    // console.log('qqq-move坐标',currentX,currentY)
     // 绘制中工具的临时宽高
     const tempWidth = currentX - startX;
     const tempHeight = currentY - startY;
@@ -1161,7 +1159,6 @@ export default class ScreenShot {
     // 单击截取屏幕状态为true
     // 则截取整个屏幕
     const cutBoxPosition = this.data.getCutOutBoxPosition();
-    // console.log('qqq',cutBoxPosition,this.dragFlag);
 
     if (
       cutBoxPosition.width === 0 &&
