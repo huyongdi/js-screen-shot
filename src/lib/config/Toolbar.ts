@@ -12,16 +12,16 @@ export default [
     title: "right-top"
   },
   {
+    id: 6,
+    title: "text"
+  },
+  {
     id: 4,
     title: "brush"
   },
   {
     id: 5,
     title: "mosaicPen"
-  },
-  {
-    id: 6,
-    title: "text"
   },
   {
     id: 7,

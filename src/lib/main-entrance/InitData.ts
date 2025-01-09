@@ -1,6 +1,6 @@
 import { positionInfoType, textInfoType } from "@/lib/type/ComponentType";
 import {
-  redoHistory,
+  takeOutRedo,
   takeOutHistory
 } from "@/lib/common-methods/TakeOutHistory";
 import { getToolRelativePosition } from "@/lib/common-methods/GetToolRelativePosition";
@@ -29,6 +29,8 @@ const borderSize = 8;
 let undoClickNum = 0;
 // 画笔历史记录
 let history: Array<Record<string, any>> = [];
+// 点击撤销后抛出的可恢复内容
+let redoStack: Array<Record<string, any>> = [];
 // 文本输入工具栏点击状态
 const textClickStatus = false;
 // 工具栏超出截图容器状态
@@ -60,6 +62,7 @@ let colorSelectController: HTMLElement | null = null;
 let rightPanel: HTMLElement | null = null;
 let colorSelectPanel: HTMLElement | null = null;
 let undoController: HTMLElement | null = null;
+let redoController: HTMLElement | null = null;
 // 屏幕截图容器
 let screenShotImageController: HTMLCanvasElement | null = null;
 // 截图容器是否可滚动
@@ -107,11 +110,13 @@ export default class InitData {
       fontSize = 17;
       mosaicPenSize = 10;
       history = [];
+      redoStack=[];
       undoClickNum = 0;
       colorSelectController = null;
       rightPanel = null;
       colorSelectPanel = null;
       undoController = null;
+      redoController=null;
     }
   }
 
@@ -343,6 +348,7 @@ export default class InitData {
     // 获取截图工具栏与三角形角标容器
     optionIcoController = this.getOptionIcoController();
     optionController = this.getOptionController();
+    console.log('qqq',optionIcoController,status)
     if (optionIcoController == null || optionController == null) return;
     if (status) {
       optionIcoController.style.display = "block";
@@ -516,12 +522,24 @@ export default class InitData {
     return history;
   }
 
+  public getRedo() {
+    return redoStack;
+  }
+
   public shiftHistory() {
     return history.shift();
   }
 
   public popHistory() {
-    return history.pop();
+    const action = history.pop()
+    action && redoStack.push(action)
+    return action;
+  }
+
+  public popRedo() {
+    const action = redoStack.pop()
+    action && history.push(action)
+    return action;
   }
 
   public pushHistory(item: Record<string, any>) {
@@ -605,19 +623,20 @@ export default class InitData {
   }
 
   public setRedoStatus(status: boolean) {
-    undoController = this.getRedoController();
-    if (undoController == null) return;
+    redoController = this.getRedoController();
+    console.log('qqq-执行redo',redoController,status)
+    if (redoController == null) return;
     if (status) {
       // 启用撤销按钮
-      undoController.classList.add("redo");
-      undoController.classList.remove("redo-disabled");
-      undoController.addEventListener("click", this.redoEvent);
+      redoController.classList.add("redo");
+      redoController.classList.remove("redo-disabled");
+      redoController.addEventListener("click", this.redoEvent);
       return;
     }
     // 禁用撤销按钮
-    undoController.classList.add("redo-disabled");
-    undoController.classList.remove("redo");
-    undoController.removeEventListener("click", this.redoEvent);
+    redoController.classList.add("redo-disabled");
+    redoController.classList.remove("redo");
+    redoController.removeEventListener("click", this.redoEvent);
   }
 
   public cancelEvent() {
@@ -625,7 +644,7 @@ export default class InitData {
   }
 
   public redoEvent() {
-    redoHistory();
+    takeOutRedo();
   }
 
   public getUndoController() {
@@ -634,8 +653,8 @@ export default class InitData {
   }
 
   public getRedoController() {
-    undoController = document.getElementById("redoPanel");
-    return undoController;
+    redoController = document.getElementById("redoPanel");
+    return redoController;
   }
 
   // 销毁截图容器

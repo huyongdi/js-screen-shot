@@ -59,7 +59,7 @@ export default class PlugInParameters {
       initStatus = false;
       screenShotDom = null;
       saveCallback = null;
-      maxUndoNum = 15;
+      maxUndoNum = 30;
       useRatioArrow = false;
       imgAutoFit = false;
       saveImgTitle = null;

@@ -91,6 +91,7 @@ export function toolClickEvent(
   completeCallback: Function | undefined,
   closeCallback: Function | undefined
 ) {
+  console.log('qqq点击工具',toolName,index,mouseEvent,completeCallback,closeCallback)
   const data = new InitData();
   const plugInParameters = new PlugInParameters();
   data.setActiveToolName(toolName);
@@ -186,7 +187,12 @@ export function toolClickEvent(
   if (toolName == "undo") {
     // 隐藏画笔选项工具栏
     data.setOptionStatus(false);
+    debugger
     takeOutHistory();
+  }
+
+  if (toolName == 'redo') {
+
   }
 
   // 设置裁剪框工具栏为点击状态

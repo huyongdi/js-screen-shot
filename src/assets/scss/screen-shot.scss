@@ -29,6 +29,13 @@
     &:last-child {
       margin-right: 0;
     }
+    &:hover{
+      background-color: #EEEFF1;
+    }
+
+    &:active {
+      background-color: #E5E6EB;
+    }
   }
 
   .square {
@@ -82,14 +89,6 @@
   .brush {
     background: url("~@/assets/img/brush.png") no-repeat center;
     background-size: auto;
-
-    &:hover{
-      background-color: #EEEFF1;
-    }
-
-    &:active {
-      background-color: #E5E6EB;
-    }
   }
   .brush-active{
     background-color: #E5E6EB;
@@ -122,14 +121,6 @@
   .text {
     background: url("~@/assets/img/text.png") no-repeat center;
     background-size: auto;
-
-    &:hover{
-      background-color: #EEEFF1;
-    }
-
-    &:active {
-      background-color: #E5E6EB;
-    }
   }
   .text-active {
     background-color: #E5E6EB;
