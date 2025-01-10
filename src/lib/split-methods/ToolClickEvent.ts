@@ -43,8 +43,8 @@ function hideTextInput(
   ) {
     const text = textInputController.innerText;
     if (text && text !== "") {
-      const { positionX, positionY, color, size } = data.getTextInfo();
-      drawText(text, positionX, positionY, color, size, screenShotCanvas);
+      const { positionX, positionY, color, size,bold } = data.getTextInfo();
+      drawText(text, positionX, positionY, color, size,bold, screenShotCanvas);
       // 添加历史记录
       addHistory();
     }
@@ -130,6 +130,7 @@ export function toolClickEvent(
     if (toolName === "text") {
       // 显示文字选择容器
       data.setTextSizePanelStatus(true);
+      data.setTextBoldPanelStatus(true);
       // 隐藏画笔尺寸选择容器
       data.setBrushSelectionStatus(false);
       // 颜色选择容器添加布局兼容样式
@@ -137,6 +138,8 @@ export function toolClickEvent(
     } else {
       // 隐藏下拉选择框
       data.setTextSizePanelStatus(false);
+      // 隐藏加粗组件
+      data.setTextBoldPanelStatus(false);
       // 显示画笔尺寸选择容器
       data.setBrushSelectionStatus(true);
     }

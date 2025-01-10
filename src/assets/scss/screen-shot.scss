@@ -282,23 +282,63 @@
     }
   }
 
+  .custom-select {
+    float: left;
+    width: 84px;
+    height: 28px;
+    padding: 4px 10px;
+    font-size: 14px;
+    border: 1px solid #D9DCE2;
+    border-radius: 4px;
+    background-color: white;
+    appearance: none; /* 去除原生样式 */
+    cursor: pointer;
+    //text-align: center;
+    outline: none;
+    &:focus{
+      border-color: #368FFF;
+    };
+    &:hover{
+      //outline: none;
+    }
+    option{
+      &:hover{
+        background: none;
+      }
+    }
+  }
+
   .text-size-panel {
-    width: 65px;
-    height: 20px;
+    width: 84px;
+    height: 28px;
     font-size: 14px;
     float: left;
-    border: 1px solid #bebfca;
+    border: 1px solid #D9DCE2;
     overflow: hidden;
-    border-radius: 3px;
+    border-radius: 4px;
     cursor: pointer;
+    padding: 0 12px;
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
+    &:active{
+      border: 1px solid #368FFF;
+    }
+    .triangle-down {
+      width: 0;
+      height: 0;
+      border-left: 4px solid transparent;
+      border-right: 4px solid transparent;
+      border-top: 4px solid #8C8C8C;
+      transition: .3s;
+      &.in{
+        transform: rotate(180deg);
+      }
+    }
   }
 
   .text-select-panel {
-    width: 65px;
-    display: flex;
+    width: 84px;
     flex-wrap: wrap;
     justify-content: center;
     background: #fff;
@@ -306,167 +346,204 @@
     border-radius: 3px;
     position: absolute;
     left: 10px;
-    top: -321px;
-
+    top: 40px;
+    display: none;
+    padding: 4px;
+    flex-direction: column;
+    &.revert{
+      top: -86px;
+    }
     .text-item {
-      width: 45px;
-      height: 20px;
-      font-size: 14px;
-      text-align: center;
-      margin-bottom: 5px;
+      display: block;
+      height: 28px;
+      line-height: 28px;
+      font-size: 12px;
+      text-align: left;
       cursor: pointer;
-
+      padding-left: 8px;
       &:hover {
-        background: #bebfca;
+        background: #F2F3F5;
       }
+      &.active{
+        color: #368FFF;
+      }
+    }
 
-      &:first-child {
-        margin-top: 5px;
-      }
+  }
+
+  .text-bold{
+    background: url("~@/assets/img/bold.png") no-repeat center center;
+    background-size: auto;
+    width: 24px;
+    height: 24px;
+    float: left;
+    margin-top: 2px;
+    margin-left: 8px;
+    cursor: pointer;
+    margin-right: 8px;
+    &:hover{
+      background-color: #E5E6EB;
+    }
+    &.active{
+      background-color: #E5E6EB;
     }
   }
 
   .brush-select-panel{
     height: 20px;
     float: left;
-
+    margin-top: 4px;
+    margin-right: 12px;
     .item-panel {
       width: 20px;
       height: 20px;
-      margin-right: 18px;
+      margin-right: 8px;
       float: left;
-
-      &:first-child {
-        margin-left: 2px;
+      cursor: pointer;
+      position: relative;
+      &::before{
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 8px;
+        height: 8px;
+        background-color: #8C8C8C;
+        border-radius: 50%;
+        transform: translate(-50%, -50%);
       }
-      &:last-child {
-        margin-right: 0;
+      &:hover,&.active{
+        &::before{
+          background-color: #368FFF;
+        }
       }
     }
     .brush-small {
-      background-size: cover;
-      background-image: url("~@/assets/img/round-normal-small.png");
-
-      &:hover {
-        background-image: url("~@/assets/img/round-selected-small.png");
+      &::before{
+        width: 8px;
+        height: 8px;
       }
-      &:active {
-        background-image: url("~@/assets/img/round-selected-small.png");
-      }
-    }
-    .brush-small-active {
-      background-image: url("~@/assets/img/round-selected-small.png");
     }
 
     .brush-medium {
-      background-size: cover;
-      background-image: url("~@/assets/img/round-normal-medium.png");
+      margin-right: 12px;
+      &::before{
+        width: 16px;
+        height: 16px;
+      }
+    }
 
-      &:hover {
-        background-image: url("~@/assets/img/round-selected-medium.png");
-      }
-      &:active {
-        background-image: url("~@/assets/img/round-selected-medium.png");
-      }
-    }
-    .brush-medium-active{
-      background-image: url("~@/assets/img/round-selected-medium.png");
-    }
 
     .brush-big {
-      background-size: cover;
-      background-image: url("~@/assets/img/round-normal-big.png");
-
-      &:hover {
-        background-image: url("~@/assets/img/round-selected-big.png");
-      }
-      &:active {
-        background-image: url("~@/assets/img/round-selected-big.png");
+      &::before{
+        width: 20px;
+        height: 20px;
       }
     }
 
-    .brush-big-active {
-      background-image: url("~@/assets/img/round-selected-big.png");
-    }
   }
 
   .right-panel {
     float: left;
     display: flex;
-    align-items: center;
-    margin-left: 39px;
-
-    // 颜色容器
-    .color-panel{
-      width: 72px;
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      background: #FFFFFF;
-      border: solid 1px #E5E6E5;
-      border-radius: 5px;
-      position: absolute;
-      top: -225px;
-      right: 28px;
-
-      .color-item {
-        width: 62px;
-        height: 20px;
-        margin-bottom: 5px;
-
-        &:nth-child(1) {
-          margin-top: 5px;
-          background: #F53440;
-        }
-        &:nth-child(2) {
-          background: #F65E95;
-        }
-        &:nth-child(3) {
-          background: #D254CF;
-        }
-        &:nth-child(4) {
-          background: #12A9D7;
-        }
-        &:nth-child(5) {
-          background: #30A345;
-        }
-        &:nth-child(6) {
-          background: #FACF50;
-        }
-        &:nth-child(7) {
-          background: #F66632;
-        }
-        &:nth-child(8) {
-          background: #989998;
-        }
-        &:nth-child(9) {
-          background: #000000;
-        }
-        &:nth-child(10) {
-          border: solid 1px #E5E6E5;
-          background: #FEFFFF;
-        }
-      }
-    }
-    // 已选择容器
-    .color-select-panel {
-      width: 62px;
+    margin-top: 2px;
+    padding-top: 2px;
+    height: 24px;
+    padding-left: 12px;
+    border-left: 1px solid #D9DCE2;
+    .color-item{
+      border: 0.83px solid #D9DCE2;
+      border-radius: 3.33px;
+      width: 20px;
       height: 20px;
-      background: #F53340;
-      border: solid 1px #E5E6E5;
-
-      &.text-select-status {
-        margin-left: 31px;
+      margin: 0 4px;
+      cursor: pointer;
+      position: relative;
+      &.active{
+        &::before{
+          content: '';
+          position: absolute;
+          top: 6px;
+          left: 4px;
+          width: 10px;
+          height: 5px;
+          border-left: 2px solid #fff;
+          border-bottom: 2px solid #fff;
+          transform: rotate(-45deg);
+        }
       }
     }
-
-    .pull-down-arrow {
-      width: 15px;
-      height: 8px;
-      margin-left: 10px;
-      background-size: cover;
-      background-image: url("~@/assets/img/PopoverPullDownArrow.png");
-    }
+    //// 颜色容器
+    //.color-panel{
+    //  width: 72px;
+    //  display: flex;
+    //  justify-content: center;
+    //  flex-wrap: wrap;
+    //  background: #FFFFFF;
+    //  border: solid 1px #E5E6E5;
+    //  border-radius: 5px;
+    //  position: absolute;
+    //  top: -225px;
+    //  right: 28px;
+    //
+    //  .color-item {
+    //    width: 62px;
+    //    height: 20px;
+    //    margin-bottom: 5px;
+    //
+    //    &:nth-child(1) {
+    //      margin-top: 5px;
+    //      background: #F53440;
+    //    }
+    //    &:nth-child(2) {
+    //      background: #F65E95;
+    //    }
+    //    &:nth-child(3) {
+    //      background: #D254CF;
+    //    }
+    //    &:nth-child(4) {
+    //      background: #12A9D7;
+    //    }
+    //    &:nth-child(5) {
+    //      background: #30A345;
+    //    }
+    //    &:nth-child(6) {
+    //      background: #FACF50;
+    //    }
+    //    &:nth-child(7) {
+    //      background: #F66632;
+    //    }
+    //    &:nth-child(8) {
+    //      background: #989998;
+    //    }
+    //    &:nth-child(9) {
+    //      background: #000000;
+    //    }
+    //    &:nth-child(10) {
+    //      border: solid 1px #E5E6E5;
+    //      background: #FEFFFF;
+    //    }
+    //  }
+    //}
+    //// 已选择容器
+    //.color-select-panel {
+    //  width: 62px;
+    //  height: 20px;
+    //  background: #F53340;
+    //  border: solid 1px #E5E6E5;
+    //
+    //  &.text-select-status {
+    //    margin-left: 31px;
+    //  }
+    //}
+    //
+    //.pull-down-arrow {
+    //  width: 15px;
+    //  height: 8px;
+    //  margin-left: 10px;
+    //  background-size: cover;
+    //  background-image: url("~@/assets/img/PopoverPullDownArrow.png");
+    //}
   }
 
 }
@@ -491,7 +568,6 @@
 #textInputPanel {
   min-width: 20px;
   min-height: 20px;
-  font-weight: bold;
   padding: 0;
   margin: 0;
   box-sizing: border-box;
@@ -501,6 +577,9 @@
   top: 0;
   left: 0;
   border: none;
+  &.bold{
+    font-weight: bold;
+  }
 }
 .hidden-screen-shot-scroll {
   width: 100vw;

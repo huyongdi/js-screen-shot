@@ -13,13 +13,14 @@ export function drawText(
   mouseY: number,
   color: string,
   fontSize: number,
+  bold: boolean,
   context: CanvasRenderingContext2D
 ) {
   context.save();
   context.lineWidth = 1;
   context.fillStyle = color;
   context.textBaseline = "middle";
-  context.font = `bold ${fontSize}px none`;
+  context.font = `${bold ? 'bold':''} ${fontSize}px none`;
   // 处理换行符并绘制多行文本
   const lines = text.split("\n"); // 根据换行符拆分文本为多行
   console.log(lines);

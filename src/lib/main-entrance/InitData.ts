@@ -14,7 +14,7 @@ let dragging = false;
 // 截图工具栏点击状态
 let toolClickStatus = false;
 // 当前选择的颜色
-let selectedColor = "#F53340";
+let selectedColor = "#24C366";
 // 当前点击的工具栏名称
 let toolName = "";
 // 当前点击的工具栏id
@@ -54,10 +54,13 @@ let textInputController: HTMLDivElement | null = null;
 let optionIcoController: HTMLDivElement | null = null;
 // 截图工具栏文字大小选择dom
 let optionTextSizeController: HTMLDivElement | null = null;
+let optionTextBoldController: HTMLDivElement | null = null;
 let brushSelectionController: HTMLDivElement | null = null;
 let textSizeContainer: HTMLDivElement | null = null;
+let textBoldContainer: HTMLDivElement | null = null;
 let remarkContainer: HTMLDivElement | null = null;
-let fontSize = 17;
+let fontSize = 16;
+let fontBold = false
 let optionController: HTMLDivElement | null = null;
 let colorSelectController: HTMLElement | null = null;
 let rightPanel: HTMLElement | null = null;
@@ -87,12 +90,14 @@ export default class InitData {
       screenShotController = null;
       dragging = false;
       toolController = null;
-      textInputController = null;
       optionController = null;
       optionIcoController = null;
       optionTextSizeController = null;
+      optionTextBoldController= null;
+      textInputController = null;
       brushSelectionController = null;
       textSizeContainer = null;
+      textBoldContainer = null;
       remarkContainer = null;
       cutBoxSizeContainer = null;
       cutOutBoxPosition = {
@@ -105,11 +110,12 @@ export default class InitData {
       resetScrollbarState = false;
       textEditState = false;
       toolPositionStatus = false;
-      selectedColor = "#F53340";
+      selectedColor = "#24C366";
       toolName = "";
       toolId = null;
       penSize = 2;
-      fontSize = 17;
+      fontSize = 16;
+      fontBold = false;
       mosaicPenSize = 10;
       history = [];
       redoStack = [];
@@ -348,6 +354,28 @@ export default class InitData {
     fontSize = size;
   }
 
+  public setFontBold(type?: boolean) {
+    optionTextBoldController = this.getOptionTextBoldController();
+    textInputController = this.getTextInputController();
+    if (optionTextBoldController == null) return;
+    if (type === undefined) {
+      type = !optionTextBoldController.classList.contains("active");
+    }
+
+    if (type) {
+      optionTextBoldController.classList.add("active");
+      textInputController?.classList.add("bold");
+    } else {
+      optionTextBoldController.classList.remove("active");
+      textInputController?.classList.remove("bold");
+    }
+    fontBold = type;
+  }
+
+  public getFontBold() {
+    return fontBold;
+  }
+
   // 设置截图工具栏画笔选择工具展示状态
   public setOptionStatus(status: boolean) {
     // 获取截图工具栏与三角形角标容器
@@ -368,11 +396,23 @@ export default class InitData {
   }
 
   // 设置截图工具栏文字大小下拉框选项选择工具展示状态
-  public setTextSizeOptionStatus(status: boolean) {
+  public setTextSizeOptionStatus(status?: boolean) {
     optionTextSizeController = this.getOptionTextSizeController();
     if (optionTextSizeController == null) return;
+    console.log('qqq',status,status === undefined)
+    if (status === undefined) {
+      status = optionTextSizeController.style.display === 'none';
+      console.log('qqq-进入判断',status)
+    }
     if (status) {
       optionTextSizeController.style.display = "flex";
+      // 如果底部距离不够，则需要渲染到上面
+      const position = this.getToolPosition();
+      if (position && position.distance < 150) {
+        optionTextSizeController.classList.add('revert')
+      } else {
+        optionTextSizeController.classList.remove('revert')
+      }
       return;
     }
     optionTextSizeController.style.display = "none";
@@ -387,6 +427,16 @@ export default class InitData {
       return;
     }
     textSizeContainer.style.display = "none";
+  }
+
+  public setTextBoldPanelStatus(status: boolean) {
+    textBoldContainer = this.getTextBoldContainer();
+    if (textBoldContainer == null) return;
+    if (status) {
+      textBoldContainer.style.display = "block";
+      return;
+    }
+    textBoldContainer.style.display = "none";
   }
 
   public setRemarkPanelStatus(status: boolean) {
@@ -439,9 +489,23 @@ export default class InitData {
     return textSizeContainer;
   }
 
+  public getTextBoldContainer() {
+    textSizeContainer = document.getElementById(
+      "textBold"
+    ) as HTMLDivElement | null;
+    return textSizeContainer;
+  }
+
   public getOptionTextSizeController() {
     optionTextSizeController = document.getElementById(
       "textSelectPanel"
+    ) as HTMLDivElement | null;
+    return optionTextSizeController;
+  }
+
+  public getOptionTextBoldController() {
+    optionTextSizeController = document.getElementById(
+      "textBold"
     ) as HTMLDivElement | null;
     return optionTextSizeController;
   }

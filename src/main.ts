@@ -519,6 +519,7 @@ export default class ScreenShot {
 
   // 鼠标按下事件
   private mouseDownEvent = (event: MouseEvent | TouchEvent) => {
+    console.log('qqq-mousedown')
     // 隐藏颜色选择面板
     this.data.setColorPanelStatus(false);
     // 隐藏文字大小选择面板
@@ -602,6 +603,7 @@ export default class ScreenShot {
           this.textInputPosition.mouseY,
           this.data.getSelectedColor(),
           this.data.getFontSize(),
+          this.data.getFontBold(),
           this.screenShotCanvas
         );
 
@@ -642,7 +644,8 @@ export default class ScreenShot {
             positionX: mouseX,
             positionY: mouseY,
             color: this.data.getSelectedColor(),
-            size: this.data.getFontSize()
+            size: this.data.getFontSize(),
+            bold: this.data.getFontBold(),
           });
         }
       });
@@ -962,6 +965,7 @@ export default class ScreenShot {
           this.textInputPosition.mouseY,
           this.data.getSelectedColor(),
           this.data.getFontSize(),
+          this.data.getFontBold(),
           this.screenShotCanvas
         );
         // 清空文本输入区域的内容

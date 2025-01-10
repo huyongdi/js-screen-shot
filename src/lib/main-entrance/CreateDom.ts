@@ -13,13 +13,14 @@ import {
   setBrushSize,
   setMosaicPenSize
 } from "@/lib/common-methods/SetBrushSize";
-import { selectColor } from "@/lib/common-methods/SelectColor";
-import { getColor } from "@/lib/common-methods/GetColor";
+import {selectColor} from "@/lib/common-methods/SelectColor";
+import {setColor} from "@/lib/common-methods/GetColor";
 import {
   getTextSize,
   hiddenColorPanelStatus,
   hiddenTextSizeOptionStatus,
   selectTextSize,
+  setTextBold,
   setTextSize
 } from "@/lib/common-methods/SelectTextSize";
 import PlugInParameters from "@/lib/main-entrance/PlugInParameters";
@@ -65,6 +66,31 @@ export default class CreateDom {
     96
   ];
 
+  private readonly textFontSizeArr = [
+    {
+      name: "小号",
+      size: 12
+    },
+    {
+      name: "中号",
+      size: 16
+    },
+    {
+      name: "大号",
+      size: 24
+    }
+  ];
+
+  private readonly colorArr = [
+    "#FF543A",
+    "#FFAE00",
+    "#24C366",
+    "#368FFF",
+    "#262626",
+    "#8C8C8C",
+    "#FFFFFF"
+  ];
+
   constructor(options: screenShotType) {
     const plugInParameters = new PlugInParameters();
     this.screenShotController = document.createElement("canvas");
@@ -80,7 +106,11 @@ export default class CreateDom {
     this.data = new InitData();
     this.optionController.addEventListener("click", evt => {
       const target = evt.target as HTMLElement;
-      if (target.id === "colorSelectPanel" || target.id === "textSizePanel") {
+      if (
+        target.id === "colorSelectPanel" ||
+        target.id === "textSizePanel" ||
+        target.id === "textSizeSpan"
+      ) {
         return;
       }
       // 点击工具栏的其他位置则隐藏文字大小选择面板与颜色选择面板
@@ -164,7 +194,6 @@ export default class CreateDom {
         itemPanel.classList.add("panel-confirm");
         itemPanel.classList.add("panel-icon");
       } else {
-
       }
 
       if (item?.icon) {
@@ -185,8 +214,8 @@ export default class CreateDom {
     remarkPanel.id = "remarkPanel";
     const textarea = document.createElement("textarea");
     textarea.className = "remark-input";
-    textarea.id = "remarkTextarea"
-    textarea.placeholder='请输入巡视记录';
+    textarea.id = "remarkTextarea";
+    textarea.placeholder = "请输入巡视记录";
     textarea.maxLength = 200;
     remarkPanel.appendChild(textarea);
     const span = document.createElement("span");
@@ -205,40 +234,72 @@ export default class CreateDom {
     // 创建文字展示容器
     const textSizePanel = document.createElement("div");
     textSizePanel.className = "text-size-panel";
-    textSizePanel.innerText = `${getTextSize()} px`;
     textSizePanel.id = "textSizePanel";
+    const textSizeSpan = document.createElement("span");
+    textSizeSpan.innerText = getTextSize();
+    textSizeSpan.id = "textSizeSpan";
+    textSizePanel.appendChild(textSizeSpan);
+    const triangleIcon = document.createElement("div");
+    triangleIcon.className = "triangle-down";
+    textSizePanel.appendChild(triangleIcon);
     // 创建文字大小选择容器
     const textSelectPanel = document.createElement("div");
     textSelectPanel.className = "text-select-panel";
     textSelectPanel.id = "textSelectPanel";
-    // 创建文字选择下拉
-    for (let i = 0; i < this.textFontSizeList.length; i++) {
+
+    this.textFontSizeArr.forEach(item => {
       const itemPanel = document.createElement("div");
-      const size = this.textFontSizeList[i];
       itemPanel.className = "text-item";
-      itemPanel.setAttribute("data-value", `${size}`);
-      itemPanel.innerText = `${size} px`;
-      // 添加点击监听
+      if (item.name === "中号") {
+        itemPanel.classList.add("active");
+      }
+      itemPanel.setAttribute("data-value", `${item.size}`);
+      itemPanel.innerText = `${item.name}`;
       itemPanel.addEventListener("click", () => {
         // 隐藏容器
         textSelectPanel.style.display = "none";
         const currentTextSize = itemPanel.getAttribute("data-value");
-        // 容器赋值
-        textSizePanel.innerText = `${currentTextSize} px`;
         if (currentTextSize) {
           setTextSize(+currentTextSize);
         }
+        // options active设置class
+        const oldActive = textSelectPanel.getElementsByClassName("active");
+        if (oldActive.length > 0) {
+          oldActive[0].classList.remove("active");
+        }
+        itemPanel.classList.add("active");
+        // 容器赋值
+        textSizeSpan.innerHTML = getTextSize();
+        triangleIcon.classList.remove("in");
       });
       textSelectPanel.appendChild(itemPanel);
-    }
+    });
+    this.optionController.appendChild(textSizePanel);
+
     textSizePanel.style.display = "none";
     textSelectPanel.style.display = "none";
     // 容器点击时，展示文字大小选择容器
-    textSizePanel.addEventListener("click", () => {
+    textSizePanel.addEventListener("click", e => {
       selectTextSize();
+      if (triangleIcon.classList.contains("in")) {
+        triangleIcon.classList.remove("in");
+      } else {
+        triangleIcon.classList.add("in");
+      }
     });
+
+    // 加粗显示
+    const textBold = document.createElement("div");
+    textBold.className = "text-bold";
+    textBold.id = "textBold";
+    textBold.addEventListener("click", () => {
+      console.log("qqq-e");
+      setTextBold();
+    });
+
     this.optionController.appendChild(textSizePanel);
     this.optionController.appendChild(textSelectPanel);
+    this.optionController.appendChild(textBold);
   }
 
   // 渲染画笔大小选择图标与颜色选择容器
@@ -254,7 +315,6 @@ export default class CreateDom {
       switch (i) {
         case 0:
           itemPanel.classList.add("brush-small");
-          itemPanel.classList.add("brush-small-active");
           itemPanel.addEventListener("click", e => {
             setBrushSize("small", 1, e);
             setMosaicPenSize("small", 1, e);
@@ -262,6 +322,7 @@ export default class CreateDom {
           break;
         case 1:
           itemPanel.classList.add("brush-medium");
+          itemPanel.classList.add("active");
           itemPanel.addEventListener("click", e => {
             setBrushSize("medium", 2, e);
             setMosaicPenSize("medium", 2, e);
@@ -277,40 +338,64 @@ export default class CreateDom {
       }
       brushSelectPanel.appendChild(itemPanel);
     }
-    // 右侧颜色选择容器
+
+    // 创建颜色选择容器
     const rightPanel = document.createElement("div");
     rightPanel.className = "right-panel";
-    // 创建颜色选择容器
-    const colorSelectPanel = document.createElement("div");
-    colorSelectPanel.className = "color-select-panel";
-    colorSelectPanel.id = "colorSelectPanel";
-    colorSelectPanel.addEventListener("click", () => {
-      selectColor();
-    });
-    // 创建颜色显示容器
-    const colorPanel = document.createElement("div");
-    colorPanel.id = "colorPanel";
-    colorPanel.className = "color-panel";
-    colorPanel.style.display = "none";
-    for (let i = 0; i < 10; i++) {
+    rightPanel.id = "rightPanel"
+    this.colorArr.forEach(item => {
       const colorItem = document.createElement("div");
       colorItem.className = "color-item";
+      if (item === '#24C366') {
+        colorItem.className+=" active"
+      }
+      colorItem.style.backgroundColor = item;
       colorItem.addEventListener("click", () => {
-        getColor(i + 1);
+        setColor(item);
+        const oldActive = rightPanel.getElementsByClassName("active");
+        if (oldActive.length > 0) {
+          oldActive[0].classList.remove("active");
+        }
+        colorItem.classList.add('active')
       });
-      colorItem.setAttribute("data-index", i + "");
-      colorPanel.appendChild(colorItem);
-    }
-    rightPanel.appendChild(colorPanel);
-    rightPanel.appendChild(colorSelectPanel);
-    rightPanel.id = "rightPanel";
-    // 创建颜色下拉箭头选择容器
-    const pullDownArrow = document.createElement("div");
-    pullDownArrow.className = "pull-down-arrow";
-    pullDownArrow.addEventListener("click", () => {
-      selectColor();
+      rightPanel.appendChild(colorItem);
     });
-    rightPanel.appendChild(pullDownArrow);
+
+    // // 右侧颜色选择容器
+    // const rightPanel = document.createElement("div");
+    // rightPanel.className = "right-panel";
+    // // 创建颜色选择容器
+    // const colorSelectPanel = document.createElement("div");
+    // colorSelectPanel.className = "color-select-panel";
+    // colorSelectPanel.id = "colorSelectPanel";
+    // colorSelectPanel.addEventListener("click", () => {
+    //   selectColor();
+    // });
+    // // 创建颜色显示容器
+    // const colorPanel = document.createElement("div");
+    // colorPanel.id = "colorPanel";
+    // colorPanel.className = "color-panel";
+    // colorPanel.style.display = "none";
+    // for (let i = 0; i < 10; i++) {
+    //   const colorItem = document.createElement("div");
+    //   colorItem.className = "color-item";
+    //   colorItem.addEventListener("click", () => {
+    //     getColor(i + 1);
+    //   });
+    //   colorItem.setAttribute("data-index", i + "");
+    //   colorPanel.appendChild(colorItem);
+    // }
+    // rightPanel.appendChild(colorPanel);
+    // rightPanel.appendChild(colorSelectPanel);
+    // rightPanel.id = "rightPanel";
+    // // 创建颜色下拉箭头选择容器
+    // const pullDownArrow = document.createElement("div");
+    // pullDownArrow.className = "pull-down-arrow";
+    // pullDownArrow.addEventListener("click", () => {
+    //   selectColor();
+    // });
+    // rightPanel.appendChild(pullDownArrow);
+
     // 向画笔绘制选项容器追加画笔选择和颜色显示容器
     this.optionController.appendChild(brushSelectPanel);
     this.optionController.appendChild(rightPanel);

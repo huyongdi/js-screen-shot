@@ -18,13 +18,13 @@ export function setBrushSize(
   let sizeNum = 2;
   switch (size) {
     case "small":
-      sizeNum = 2;
+      sizeNum = 1;
       break;
     case "medium":
-      sizeNum = 5;
+      sizeNum = 3;
       break;
     case "big":
-      sizeNum = 10;
+      sizeNum = 5;
       break;
   }
   data.setPenSize(sizeNum);

@@ -27,6 +27,7 @@ export type textInfoType = {
   positionY: number;
   color: string;
   size: number;
+  bold: boolean;
 };
 
 // 裁剪框缩放时所返回的数据类型
