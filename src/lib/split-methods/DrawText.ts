@@ -23,11 +23,11 @@ export function drawText(
   context.font = `${bold ? 'bold':''} ${fontSize}px none`;
   // 处理换行符并绘制多行文本
   const lines = text.split("\n"); // 根据换行符拆分文本为多行
-  console.log(lines);
+
   const lineHeight = fontSize * 1.4; // 设定行高为字体大小的1.4倍
   lines.forEach((line, index) => {
     // 调整每行的垂直位置
-    const lineY = mouseY + lineHeight * index;
+    const lineY = mouseY + lineHeight * index +1;
     context.fillText(line, mouseX, lineY);
   });
   context.restore();

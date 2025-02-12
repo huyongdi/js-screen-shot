@@ -57,3 +57,17 @@ export function takeOutRedo() {
     data.setUndoStatus(true);
   }
 }
+
+// // 重新画所有
+// export function redoAll() {
+//   const data = new InitData();
+//   const screenShortCanvas = data.getScreenShotContainer()?.getContext("2d");
+//   if (screenShortCanvas != null && data.getHistory().length>0) {
+//     console.log('qqq-111',data.getHistory())
+//     screenShortCanvas.putImageData(
+//       data.getHistory()[data.getHistory().length - 1]["data"],
+//       0,
+//       0
+//     );
+//   }
+// }

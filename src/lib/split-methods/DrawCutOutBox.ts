@@ -1,5 +1,59 @@
 import PlugInParameters from "@/lib/main-entrance/PlugInParameters";
 
+const lineWidth = 2
+let overPoints: any[] = [];
+const offscreenCanvas = document.createElement('canvas');
+const offscreenContext = offscreenCanvas.getContext('2d');
+offscreenCanvas.id = "offscreenCanvas";
+offscreenCanvas.style.position = "fixed";
+offscreenCanvas.style.zIndex = "100000";
+offscreenCanvas.style.pointerEvents = "none"
+
+// 绘制裁剪框的八个原点
+export const drawPoint = (
+  strokeColor: string,
+  fillColor: string,
+  borderSize: number,
+  addWidth: number
+) => {
+  if (!offscreenContext) return
+  const { width, height } = offscreenCanvas;
+  // 设定圆点的半径
+  const radius = borderSize / 2;
+
+  // 设定外框的颜色和宽度
+  offscreenContext.lineWidth = lineWidth;  // 外框宽度，可以根据需求调整
+  offscreenContext.strokeStyle = strokeColor;  // 外框颜色为蓝色
+
+  // 设定内框的填充颜色为白色
+  offscreenContext.fillStyle = fillColor;
+
+  // 绘制8个圆点: 顺时针从左上角开始
+  const points = [
+    [addWidth / 2, addWidth / 2],
+    [width / 2, addWidth / 2],
+    [width-addWidth/2, addWidth / 2],
+
+    [width-addWidth/2, height / 2],
+
+    [width-addWidth/2, height - addWidth/2],
+    [width / 2, height - addWidth/2],
+    [addWidth / 2, height - addWidth/2],
+
+    [addWidth / 2, height / 2]
+  ];
+
+  // 遍历每个点，绘制圆
+  points.forEach(([x, y]) => {
+    offscreenContext.beginPath();
+    offscreenContext.arc(x , y, radius, 0, Math.PI * 2); // 绘制圆，调整圆心位置
+    offscreenContext.fill();  // 填充白色
+    offscreenContext.stroke();  // 绘制蓝色边框
+  })
+
+  overPoints = points.map(([x, y]) => ({x, y, radius}));
+};
+
 /**
  * 绘制裁剪框
  * @param mouseX 鼠标x轴坐标
@@ -56,73 +110,21 @@ export function drawCutOutBox(
   context.fillStyle = data.getCutBoxBdColor();
   // 是否绘制裁剪框的8个像素点
   if (drawBorders) {
-    const size = borderSize
-    // 设定圆点的半径
-    const radius = size / 2;
+    const addWidth = borderSize + lineWidth
+    offscreenCanvas.width = width + addWidth;
+    offscreenCanvas.height = height + addWidth;
+    offscreenCanvas.style.left =
+      parseFloat(controller.style.left) + mouseX - addWidth / 2 + "px";
+    offscreenCanvas.style.top = parseFloat(controller.style.top) + mouseY -addWidth/2 + 'px';
 
-    // 设定外框的颜色和宽度
-    context.lineWidth = 2;  // 外框宽度，可以根据需求调整
-    context.strokeStyle = '#368FFF';  // 外框颜色为蓝色
-
-    // 设定内框的填充颜色为白色
-    context.fillStyle = 'white';
-
-    // 绘制8个圆点
-    const points = [
-      [mouseX - size / 2, mouseY - size / 2],
-      [mouseX - size / 2 + width / 2, mouseY - size / 2],
-      [mouseX - size / 2 + width, mouseY - size / 2],
-      [mouseX - size / 2, mouseY - size / 2 + height / 2],
-      [mouseX - size / 2 + width, mouseY - size / 2 + height / 2],
-      [mouseX - size / 2, mouseY - size / 2 + height],
-      [mouseX - size / 2 + width / 2, mouseY - size / 2 + height],
-      [mouseX - size / 2 + width, mouseY - size / 2 + height]
-    ];
-
-    // 遍历每个点，绘制圆
-    points.forEach(([x, y]) => {
-      context.beginPath();
-      context.arc(x + radius, y + radius, radius, 0, Math.PI * 2); // 绘制圆，调整圆心位置
-      context.fill();  // 填充白色
-      context.stroke();  // 绘制蓝色边框
-    });
-
-    // 像素点大小
-    // const size = borderSize;
-    // 绘制像素点
-    // context.fillRect(mouseX - size / 2, mouseY - size / 2, size, size);
-    // context.fillRect(
-    //   mouseX - size / 2 + width / 2,
-    //   mouseY - size / 2,
-    //   size,
-    //   size
-    // );
-    // context.fillRect(mouseX - size / 2 + width, mouseY - size / 2, size, size);
-    // context.fillRect(
-    //   mouseX - size / 2,
-    //   mouseY - size / 2 + height / 2,
-    //   size,
-    //   size
-    // );
-    // context.fillRect(
-    //   mouseX - size / 2 + width,
-    //   mouseY - size / 2 + height / 2,
-    //   size,
-    //   size
-    // );
-    // context.fillRect(mouseX - size / 2, mouseY - size / 2 + height, size, size);
-    // context.fillRect(
-    //   mouseX - size / 2 + width / 2,
-    //   mouseY - size / 2 + height,
-    //   size,
-    //   size
-    // );
-    // context.fillRect(
-    //   mouseX - size / 2 + width,
-    //   mouseY - size / 2 + height,
-    //   size,
-    //   size
-    // );
+    drawPoint(
+      "#368FFF",
+      "white",
+      borderSize,
+      addWidth
+    );
+    document.body.appendChild(offscreenCanvas)
+    // context.drawImage(offscreenCanvas, 0, 0)
   }
   // 绘制结束
   context.restore();
@@ -131,7 +133,7 @@ export function drawCutOutBox(
 
   context.globalCompositeOperation = "destination-over";
   // 图片尺寸使用canvas容器的css中的尺寸
-  let { imgWidth, imgHeight } = {
+  let {imgWidth, imgHeight} = {
     imgWidth: parseInt(controller?.style.width),
     imgHeight: parseInt(controller?.style.height)
   };
@@ -145,7 +147,7 @@ export function drawCutOutBox(
 
   // 用户有传入自定义尺寸则使用
   if (data.getCustomImgSize().useCustomImgSize) {
-    const { w, h } = data.getCustomImgSize().customImgSize;
+    const {w, h} = data.getCustomImgSize().customImgSize;
     imgWidth = w;
     imgHeight = h;
   }
@@ -204,3 +206,4 @@ export function drawCutOutBox(
     height: height
   };
 }
+

@@ -1,16 +1,16 @@
 /**
  * 裁剪框工具栏点击事件
  */
-import { setSelectedClassName } from "@/lib/common-methods/SetSelectedClassName";
-import { calculateOptionIcoPosition } from "@/lib/split-methods/CalculateOptionIcoPosition";
+import {setSelectedClassName} from "@/lib/common-methods/SetSelectedClassName";
+import {calculateOptionIcoPosition} from "@/lib/split-methods/CalculateOptionIcoPosition";
 import InitData from "@/lib/main-entrance/InitData";
-import { getCanvasImgData } from "@/lib/common-methods/GetCanvasImgData";
-import { takeOutHistory } from "@/lib/common-methods/TakeOutHistory";
-import { drawCutOutBox } from "@/lib/split-methods/DrawCutOutBox";
-import { drawText } from "@/lib/split-methods/DrawText";
-import { addHistory } from "@/lib/split-methods/AddHistoryData";
+import {getCanvasImgData} from "@/lib/common-methods/GetCanvasImgData";
+import {takeOutHistory} from "@/lib/common-methods/TakeOutHistory";
+import {drawCutOutBox} from "@/lib/split-methods/DrawCutOutBox";
+import {drawText} from "@/lib/split-methods/DrawText";
+import {addHistory} from "@/lib/split-methods/AddHistoryData";
 import PlugInParameters from "@/lib/main-entrance/PlugInParameters";
-import { userToolbarFnType } from "@/lib/type/ComponentType";
+import {userToolbarFnType} from "@/lib/type/ComponentType";
 
 function getToolbarContainer() {
   const data = new InitData();
@@ -43,8 +43,8 @@ function hideTextInput(
   ) {
     const text = textInputController.innerText;
     if (text && text !== "") {
-      const { positionX, positionY, color, size,bold } = data.getTextInfo();
-      drawText(text, positionX, positionY, color, size,bold, screenShotCanvas);
+      const {positionX, positionY, color, size, bold} = data.getTextInfo();
+      drawText(text, positionX, positionY, color, size, bold, screenShotCanvas);
       // 添加历史记录
       addHistory();
     }
@@ -91,7 +91,6 @@ export function toolClickEvent(
   completeCallback: Function | undefined,
   closeCallback: Function | undefined
 ) {
-  console.log("qqq点击工具",toolName,index,mouseEvent,completeCallback,closeCallback)
   const data = new InitData();
   const plugInParameters = new PlugInParameters();
   data.setActiveToolName(toolName);
@@ -113,7 +112,7 @@ export function toolClickEvent(
   //     ScreenShotImageController
   //   );
   // }
-  if (mouseEvent.target.className.includes("active")){
+  if (mouseEvent.target.className.includes("active")) {
     // 取消选中相关效果
     data.setToolName("");
     setSelectedClassName(mouseEvent, index, false);
@@ -193,7 +192,9 @@ export function toolClickEvent(
       const base64 = getCanvasImgData(false);
       // 触发回调函数，截图数据回传给插件调用者
       if (completeCallback) {
-        completeCallback({ base64, cutInfo: data.getCutOutBoxPosition() });
+        // @ts-ignore
+        const remarkValue = document.getElementById("remarkTextarea")?.value;
+        completeCallback({base64, cutInfo: data.getCutOutBoxPosition(), remarkValue});
       }
       if (!plugInParameters.getDestroyContainerState()) {
         // 隐藏工具栏

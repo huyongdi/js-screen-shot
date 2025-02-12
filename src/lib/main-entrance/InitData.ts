@@ -791,6 +791,10 @@ export default class InitData {
     document.body.removeChild(optionController);
     document.body.removeChild(textInputController);
     document.body.removeChild(cutBoxSizeContainer);
+    if (document.getElementById("offscreenCanvas") !== null) {
+      // @ts-ignore
+      document.body.removeChild(document.getElementById("offscreenCanvas"));
+    }
     if (document.body.classList.contains("no-cursor")) {
       document.body.classList.remove("no-cursor");
     }
