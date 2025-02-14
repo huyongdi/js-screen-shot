@@ -1205,9 +1205,16 @@ export default class ScreenShot {
     // 保存绘制后的图形位置信息
     this.drawGraphPosition = this.tempGraphPosition;
     // 如果工具栏未点击则保存裁剪框位置
+    console.log("qqq123")
     if (!this.data.getToolClickStatus()) {
       const { startX, startY, width, height } = this.drawGraphPosition;
       this.data.setCutOutBoxPosition(startX, startY, width, height);
+
+      // TODO: 初始化时自动打开备注
+      setTimeout(()=>{
+        // @ts-ignore
+        document.getElementsByClassName('item-panel')[0]?.click()
+      })
     }
     // 保存边框节点信息
     this.cutOutBoxBorderArr = saveBorderArrInfo(
